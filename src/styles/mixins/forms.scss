@@ -1,0 +1,14 @@
+@mixin form-styles {
+  font-family: Special Elite, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  border: 1px solid var(--dark-grey);
+  padding: .5rem;
+  vertical-align: middle;
+  background-color: transparent;
+
+  &:focus-visible {
+    outline: 1px auto var(--primary-color);
+  }
+}
