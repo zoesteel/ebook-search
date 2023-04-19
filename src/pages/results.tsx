@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import {
   Link,
   useSearchParams,
@@ -11,6 +11,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import BookService from '../api/BookService';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import LoadingBackdrop from '../components/LoadingBackdrop/LoadingBackdrop';
 
 // Custom CSS for MuiBackdrop component
 const theme = createTheme({
@@ -70,14 +71,7 @@ const ResultsPage = () => {
   return (
     <>
       <ResultsStyles>
-        <ThemeProvider theme={theme}>
-          <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={isLoading}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
-        </ThemeProvider>
+        <LoadingBackdrop open={isLoading} />
 
         <Title pageName={`Results for: ${searchTerm}`} />
 
@@ -86,7 +80,6 @@ const ResultsPage = () => {
         </Link>
 
         <div className="results">
-          {console.log(results)}
           {results ? results.map((result) => (
             <Book key={result.file_id} title={result.file_name} url={result.file_link} host={result.referrer_host} />
           )) :
@@ -94,7 +87,7 @@ const ResultsPage = () => {
           {error && <p>Error: {error}. Please try again</p>}
         </div>
 
-        {results &&
+        {results?.length > 12 &&
           <Link to="/">
             <button className="search-again-btn">Search again</button>
           </Link>}

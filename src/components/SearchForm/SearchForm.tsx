@@ -1,20 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BookService from '../../api/BookService';
+import LoadingBackdrop from "../LoadingBackdrop/LoadingBackdrop";
 
 export default function SearchForm() {
   const [apiCalled, setApiCalled] = useState(false);
   const [validInput, setvalidInput] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // change this to check if results are in the store first? or loader
-    if(apiCalled && validInput) {
+    if(apiCalled && validInput && isLoading) {
       navigate(`/results?s=${searchTerm}`);
     }
   },
-  [apiCalled, searchTerm] 
+  [apiCalled] 
   );
 
   useEffect(() => {
@@ -28,9 +29,10 @@ export default function SearchForm() {
     BookService(searchTerm);
     setSearchTerm(searchTerm);
   },[BookService, setApiCalled, setSearchTerm]);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const searchTerm = e.target[0].value;
     try {
       await callApi(searchTerm);
@@ -53,6 +55,7 @@ export default function SearchForm() {
         <input type="search" onChange={(e) => handleChange(e)}></input>
         <button type="submit" disabled={!validInput} value={searchTerm}>Submit</button>
       </form>
+      <LoadingBackdrop open={isLoading} />
     </>
   )
 }
